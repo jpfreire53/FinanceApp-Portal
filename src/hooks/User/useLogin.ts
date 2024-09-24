@@ -7,16 +7,20 @@ export default function () {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [name, setName] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(false)
     const { toast } = useToast();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true)
         if (email == "" && password == "") {
+            setLoading(false)
             toast({
                 title: "Login Error!",
                 description: "Inform the email and/or password",
               })
         } else if (password.length < 8) {
+            setLoading(false)
             toast({
                 title: "Login Error!",
                 description: "the password must be greater than 8",
@@ -40,11 +44,21 @@ export default function () {
                       Cookies.set("idUser", response.data.user.idUser);
                       Cookies.set("email", response.data.user.email)
                       setTimeout(() => {
-                          window.location.href = "/features/dashboard"
+                        setLoading(false)
+                        window.location.href = "/features/dashboard"
                       }, 3000)
                 }
             }).catch((error) => {
                 if (error.response.status === 404) {
+                    setLoading(false)
+                    console.log(error)
+                    toast({
+                        title: "Login Error!",
+                        description: `${error.response.data.mensagem}`,
+                      })
+                }
+                if (error.response.status === 401) {
+                    setLoading(false)
                     console.log(error)
                     toast({
                         title: "Login Error!",
@@ -100,5 +114,6 @@ export default function () {
         handleCreateSubmit,
         name,
         setName,
+        loading
     }
 }

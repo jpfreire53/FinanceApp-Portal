@@ -8,15 +8,18 @@ export default function () {
     const [listCategories, setListCategories] = useState<Array<Category>>([]);
     const [listExpenses, setListExpenses] = useState<Array<Expenses>>([]);
     const idUser = Cookies.get("idUser")
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const handleCategories = async () => {
             try {
+                setLoading(true)
                 let response = await api.get(`/api/category/${idUser}`, {
                     withCredentials: true
                 })
 
                 if (response.status === 200) {
+                    setLoading(false)
                     setListCategories(response.data.dados)
                 }
 
@@ -26,11 +29,13 @@ export default function () {
         }
         const handleExpenses = async () => {
             try {
+                setLoading(true)
                 let response = await api.get(`/api/expenses/user/${idUser}`, {
                     withCredentials: true
                 })
 
                 if (response.status === 200) {
+                    setLoading(false)
                     setListExpenses(response.data.dados)
                 }
 
@@ -44,6 +49,7 @@ export default function () {
 
     return {
         listCategories,
-        listExpenses
+        listExpenses,
+        loading
     }
 }

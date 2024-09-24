@@ -1,7 +1,7 @@
 import api from "@/config/api";
 import { Category } from "@/types/Category";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "../use-toast";
 
 export default function () {
@@ -11,6 +11,7 @@ export default function () {
     const [listCategories, setListCategories] = useState<Array<Category>>([]);
     const [data, setData] = useState<Date>(new Date())
     const idUser = Cookies.get("idUser")
+    const [loading, setLoading] = useState<boolean>(false);
     
     useEffect(() => {
         const handleCategories = async () => {
@@ -30,9 +31,11 @@ export default function () {
         handleCategories();
     }, [])
 
-    const handleCreateExpense = async () => {
+    const handleCreateExpense = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (validate()) {
-            let response = await api.post("/api/expenses/create", {
+            setLoading(true)
+            await api.post("/api/expenses/create", {
                 description: description,
                 value: value,
                 date: data,
@@ -43,14 +46,33 @@ export default function () {
                 headers: {
                     "Content-Type": "application/json"
                 }
+            }).then((response) => {
+                if (response.status === 201) {
+                    setLoading(false)
+                    toast({
+                        title: "Gasto registrado",
+                        description: "Sucesso ao registrar este gasto!",
+                    })
+                }
+            }).catch((error) => {
+                if (error.response.status === 400) {
+                    setLoading(false)
+                    console.log(error)
+                    toast({
+                        title: "Erro ao criar!",
+                        description: `${error.response.data.mensagem}`,
+                    })
+                }
+                if (error.response.status === 500) {
+                    setLoading(false)
+                    toast({
+                        title: "Erro ao buscar",
+                        description: error.response.data.mensagem,
+                      })
+                }
             })
 
-            if (response.status === 200) {
-                toast({
-                    title: "Gasto registrado",
-                    description: "Sucesso ao registrar este gasto!",
-                })
-            }
+            
 
         }
     }
@@ -100,6 +122,7 @@ export default function () {
         handleCreateExpense,
         handleDateChange,
         data,
-        setData
+        setData,
+        loading
     }
 }

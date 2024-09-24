@@ -23,6 +23,13 @@ export default function Layout({ children }: LayoutProps) {
 
   const email = Cookies.get("email");
 
+  const handleLogout = () => {
+    Cookies.remove("idUser")
+    Cookies.remove("email")
+    Cookies.remove("token")
+    window.location.href = "/";
+  }
+
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   return (
@@ -92,7 +99,7 @@ export default function Layout({ children }: LayoutProps) {
         <header className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
-              <div className="flex">
+              <div className="flex items-center">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -104,7 +111,7 @@ export default function Layout({ children }: LayoutProps) {
               </div>
               <div className="flex items-center">
                 <span className="text-gray-700 mr-4">Olá, {email ? email : "Usuário"}!</span>
-                <Button variant="destructive" size="sm">
+                <Button onClick={handleLogout} variant="destructive" size="sm">
                   <LogOutIcon className="mr-2 h-4 w-4" />
                   Sair
                 </Button>
