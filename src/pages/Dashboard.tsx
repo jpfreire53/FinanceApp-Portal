@@ -1,15 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { DollarSignIcon, TrendingUpIcon, TrendingDownIcon, AlertCircleIcon } from 'lucide-react'
+import { TrendingUpIcon, TrendingDownIcon, DollarSignIcon, CheckCircleIcon, AlertCircleIcon } from 'lucide-react'
 
 const data = [
-  { name: 'Jan', gastos: 4000 },
-  { name: 'Fev', gastos: 3000 },
-  { name: 'Mar', gastos: 2000 },
-  { name: 'Abr', gastos: 2780 },
-  { name: 'Mai', gastos: 1890 },
-  { name: 'Jun', gastos: 2390 },
+  { month: 'Jan', gastos: 4000, receita: 6000 },
+  { month: 'Fev', gastos: 3000, receita: 5500 },
+  { month: 'Mar', gastos: 2000, receita: 5000 },
+  { month: 'Abr', gastos: 2780, receita: 6200 },
+  { month: 'Mai', gastos: 1890, receita: 4900 },
+  { month: 'Jun', gastos: 2390, receita: 5100 },
 ]
 
 export default function Dashboard() {
@@ -17,65 +16,97 @@ export default function Dashboard() {
   const gastosMes = 3500
   const receitaMes = 6000
   const percentualGasto = (gastosMes / receitaMes) * 100
+  const metaGasto = 4000
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+    <div className="space-y-8">
+      <h1 className="text-3xl font-bold mb-4 text-primaryPurple">Dashboard Financeira</h1>
+
+      {/* Linha de Indicadores Financeiros */}
+      <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-3">
+        <Card className="shadow-lg bg-primaryOrange">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Saldo Atual</CardTitle>
-            <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-white">Saldo Atual</CardTitle>
+            <DollarSignIcon className="h-5 w-5 text-muted-foreground" color="white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ {saldo.toFixed(2)}</div>
+            <div className="text-3xl font-bold text-white">R$ {saldo.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="shadow-lg bg-primaryPurple">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Gastos do Mês</CardTitle>
-            <TrendingDownIcon className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-white">Gastos do Mês</CardTitle>
+            <TrendingDownIcon className="h-5 w-5 text-muted-foreground" color="white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ {gastosMes.toFixed(2)}</div>
+            <div className="text-3xl font-bold text-white">R$ {gastosMes.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card>
+
+        <Card className="shadow-lg bg-primaryOrange">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Receita do Mês</CardTitle>
-            <TrendingUpIcon className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-white">Receita do Mês</CardTitle>
+            <TrendingUpIcon className="h-5 w-5 text-muted-foreground" color="white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ {receitaMes.toFixed(2)}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">% de Gastos</CardTitle>
-            <AlertCircleIcon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{percentualGasto.toFixed(2)}%</div>
-            <Progress value={percentualGasto} className="mt-2" />
+            <div className="text-3xl font-bold text-white">R$ {receitaMes.toFixed(2)}</div>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      {/* Meta de Gastos */}
+      <Card className="shadow-lg">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-primaryPurple">Meta de Gastos</CardTitle>
+          {gastosMes <= metaGasto ? (
+            <CheckCircleIcon className="h-5 w-5 text-green-500" />
+          ) : (
+            <AlertCircleIcon className="h-5 w-5 text-red-500" />
+          )}
+        </CardHeader>
+        <CardContent>
+          <div className="text-3xl font-bold text-primaryPurple">
+            R$ {gastosMes.toFixed(2)} / R$ {metaGasto.toFixed(2)}
+          </div>
+          <Progress color="white" value={(gastosMes / metaGasto) * 100} className="mt-3" />
+        </CardContent>
+        <CardFooter className="text-muted-foreground text-primaryPurple">
+          {gastosMes <= metaGasto ? 'Dentro da meta' : 'Acima da meta'}
+        </CardFooter>
+      </Card>
+
+      {/* Tabela de Gastos Mensais */}
+      <Card className="shadow-lg">
         <CardHeader>
           <CardTitle>Gastos nos Últimos 6 Meses</CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="gastos" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
+          <table className="min-w-full table-auto text-left text-sm">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">Mês</th>
+                <th className="px-4 py-2">Gastos</th>
+                <th className="px-4 py-2">Receita</th>
+                <th className="px-4 py-2">Variação</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item, index) => {
+                const variacao = ((item.gastos - data[index - 1]?.gastos) / (data[index - 1]?.gastos || item.gastos)) * 100
+                return (
+                  <tr key={item.month}>
+                    <td className="border px-4 py-2">{item.month}</td>
+                    <td className="border px-4 py-2">R$ {item.gastos.toFixed(2)}</td>
+                    <td className="border px-4 py-2">R$ {item.receita.toFixed(2)}</td>
+                    <td className={`border px-4 py-2 ${variacao >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {index > 0 ? `${variacao.toFixed(2)}%` : 'N/A'}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </CardContent>
       </Card>
     </div>

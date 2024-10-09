@@ -6,8 +6,10 @@ import MonthlyExpenses from "./pages/MonthlyExpenses"
 import ListExpenses from "./pages/ListExpenses"
 import UserProfile from "./pages/UserProfile"
 import Layout from "./components/Navbar"
-import LoginSignin from "./pages/LoginSignin"
+import Login from "./pages/Login"
 import Cookies from "js-cookie"
+import Signin from "./pages/Signin"
+import ListCategories from "./pages/ListCategories"
 
 function App() {
   const idUser = Cookies.get("idUser")
@@ -19,7 +21,13 @@ function App() {
           idUser !== undefined ? 
             <Navigate to="/features/dashboard" />
           :
-            <LoginSignin />
+            <Login />
+          }/>
+        <Route path="/signin" element={
+          idUser !== undefined ? 
+            <Navigate to="/features/dashboard" />
+          :
+            <Signin />
           }/>
         <Route path="/features/dashboard" element={
           idUser === undefined ? 
@@ -36,6 +44,15 @@ function App() {
           :
             <Layout>
               <CreateCategory />
+            </Layout>
+          } />
+
+        <Route path="/features/category" element={
+          idUser === undefined ? 
+            <Navigate to="/" />
+          :
+            <Layout>
+              <ListCategories />
             </Layout>
           } />
 

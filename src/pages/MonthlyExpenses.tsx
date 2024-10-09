@@ -8,17 +8,26 @@ import { MonthlyExpenses as MonthlyType } from '@/types/MonthlyExpenses'
 import { Toaster } from '@/components/ui/toaster'
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AlertTriangleIcon } from "lucide-react"
 
 export default function MonthlyExpenses() {
   const getCurrentMonth = (): string => {
     const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1; // getMonth() retorna de 0 (janeiro) a 11 (dezembro)
+    const currentMonth = currentDate.getMonth() + 1;
     return `${currentMonth}`;
   };
+
+  const getCurrentYear = (): string => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    return `${currentYear}`;
+  };
+
   const { data, loading: loadingMonthly } = useMonthlyExpensesList();
   const { user, loading: loadingListUser } = useUserList();
 
   const [mes, setMes] = useState<string>(getCurrentMonth());
+  const [ano, setAno] = useState<string>(getCurrentYear());
   const [salary, setSalary] = useState<string>();
   const [expenses, setExpenses] = useState<Array<MonthlyType>>([]);
 
@@ -28,9 +37,9 @@ export default function MonthlyExpenses() {
     }
 
     if (data) {
-      setExpenses(data.filter((gastos) => gastos.Mes === Number(mes)))
+      setExpenses(data.filter((gastos) => gastos.Mes === Number(mes) && gastos.Ano === Number(ano)))
     }
-  }, [mes, data, user])
+  }, [mes, ano, data, user])
 
   const totalGastos = expenses.reduce((acc, gasto) => acc + Number(gasto.TotalGasto), 0)
   const percentualGastoTotal = (Number(totalGastos) / Number(salary)) * 100;
@@ -39,6 +48,10 @@ export default function MonthlyExpenses() {
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ]
+
+  const anos = Array.from({ length: 5 }, (_, i) => Number(getCurrentYear()) - i);
+
+  console.log(typeof totalGastos, typeof Number(salary))
 
   return (
     <motion.div
@@ -53,8 +66,9 @@ export default function MonthlyExpenses() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
+        className='flex w-full justify-between'
       >
-        <Card className="mb-6">
+        <Card className="mb-6 mr-2 w-2/4">
           <CardHeader>
             <CardTitle>Selecione o Mês</CardTitle>
           </CardHeader>
@@ -71,6 +85,24 @@ export default function MonthlyExpenses() {
             </Select>
           </CardContent>
         </Card>
+
+        <Card className="mb-6 ml-2 w-2/4">
+          <CardHeader>
+            <CardTitle>Selecione o Ano</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Select value={ano} onValueChange={setAno}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione um ano" />
+              </SelectTrigger>
+              <SelectContent>
+                {anos.map((ano, index) => (
+                  <SelectItem key={index} value={ano.toString()}>{ano}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
       </motion.div>
       <motion.div
         initial={{ opacity: 0 }}
@@ -78,8 +110,9 @@ export default function MonthlyExpenses() {
         transition={{ delay: 0.5 }}
       >
         <Card className="mb-6">
-          <CardHeader>
+          <CardHeader className='flex flex-row items-center justify-between'>
             <CardTitle>Resumo Financeiro</CardTitle>
+            {totalGastos > Number(salary) ? <p className='text-red-600 flex gap-3'>O gasto de {meses[Number(mes) - 1].toLowerCase()} foi superior ao salário! <AlertTriangleIcon /></p> : ""}
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -112,22 +145,22 @@ export default function MonthlyExpenses() {
             </Card>
             ))
         ) : expenses.map((gasto, index) => (
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-          >
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle>{gasto.category}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">R$ {Number(gasto.TotalGasto).toFixed(2)}</p>
-                <p className="text-sm text-gray-500">
-                  {((Number(gasto.TotalGasto) / Number(salary)) * 100).toFixed(2)}% do salário
-                </p>
-                <Progress value={(Number(gasto.TotalGasto) / Number(salary)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(salary)) * 100} className="mt-2" />
-              </CardContent>
-            </Card>
-          </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+              >
+                <Card key={index}>
+                  <CardHeader>
+                    <CardTitle>{gasto.category}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-bold">R$ {Number(gasto.TotalGasto).toFixed(2)}</p>
+                    <p className="text-sm text-gray-500">
+                      {((Number(gasto.TotalGasto) / Number(salary)) * 100).toFixed(2)}% do salário
+                    </p>
+                    <Progress value={(Number(gasto.TotalGasto) / Number(salary)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(salary)) * 100} className="mt-2" />
+                  </CardContent>
+                </Card>
+              </motion.div>
         ))}
       </motion.div>
     </motion.div>
