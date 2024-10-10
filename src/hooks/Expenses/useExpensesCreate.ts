@@ -1,8 +1,8 @@
+import { toast } from "@/components/ui/use-toast";
 import api from "@/config/api";
 import { Category } from "@/types/Category";
 import Cookies from "js-cookie";
 import { FormEvent, useEffect, useState } from "react";
-import { toast } from "../use-toast";
 
 export default function () {
     const [description, setDescription] = useState<string>("");
@@ -49,6 +49,7 @@ export default function () {
             }).then((response) => {
                 if (response.status === 201) {
                     setLoading(false)
+                    clearFields()
                     toast({
                         title: "Gasto registrado",
                         description: "Sucesso ao registrar este gasto!",
@@ -75,6 +76,13 @@ export default function () {
             
 
         }
+    }
+
+    const clearFields = () => {
+        setDescription(""); 
+        setValue(undefined); 
+        setSelectedCategory(""); 
+        setData(new Date()); 
     }
 
     const validate = () => {

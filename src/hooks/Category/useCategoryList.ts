@@ -2,7 +2,7 @@ import api from "@/config/api";
 import { Category } from "@/types/Category";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { toast } from "../use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export default function () {
     const [categories, setCategories] = useState<Array<Category>>([]);

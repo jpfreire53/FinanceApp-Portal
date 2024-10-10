@@ -51,8 +51,6 @@ export default function MonthlyExpenses() {
 
   const anos = Array.from({ length: 5 }, (_, i) => Number(getCurrentYear()) - i);
 
-  console.log(typeof totalGastos, typeof Number(salary))
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -61,23 +59,23 @@ export default function MonthlyExpenses() {
       className="container mx-auto p-4"
     >
       <Toaster />
-      <h1 className="text-2xl font-bold mb-6">Cálculo de Gastos Mensais</h1>
+      <h1 className="text-2xl font-bold text-primaryPurple mb-6">Cálculo de Gastos Mensais</h1>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
         className='flex w-full justify-between'
       >
-        <Card className="mb-6 mr-2 w-2/4">
+        <Card className="mb-6 mr-2 w-2/4 border-primaryPurple">
           <CardHeader>
-            <CardTitle>Selecione o Mês</CardTitle>
+            <CardTitle className="text-primaryOrange">Selecione o Mês</CardTitle>
           </CardHeader>
           <CardContent>
             <Select value={mes} onValueChange={setMes}>
-              <SelectTrigger>
+              <SelectTrigger className="border-primaryPurple">
                 <SelectValue placeholder="Selecione um mês" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-primaryPurple">
                 {meses.map((nomeMes, index) => (
                   <SelectItem key={index + 1} value={(index + 1).toString()}>{nomeMes}</SelectItem>
                 ))}
@@ -86,16 +84,16 @@ export default function MonthlyExpenses() {
           </CardContent>
         </Card>
 
-        <Card className="mb-6 ml-2 w-2/4">
+        <Card className="mb-6 ml-2 w-2/4 border-primaryPurple">
           <CardHeader>
-            <CardTitle>Selecione o Ano</CardTitle>
+            <CardTitle className="text-primaryOrange">Selecione o Ano</CardTitle>
           </CardHeader>
           <CardContent>
             <Select value={ano} onValueChange={setAno}>
-              <SelectTrigger>
+              <SelectTrigger className="border-primaryPurple">
                 <SelectValue placeholder="Selecione um ano" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-primaryPurple">
                 {anos.map((ano, index) => (
                   <SelectItem key={index} value={ano.toString()}>{ano}</SelectItem>
                 ))}
@@ -109,9 +107,9 @@ export default function MonthlyExpenses() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        <Card className="mb-6">
+        <Card className="mb-6 border-primaryPurple">
           <CardHeader className='flex flex-row items-center justify-between'>
-            <CardTitle>Resumo Financeiro</CardTitle>
+            <CardTitle className="text-primaryOrange">Resumo Financeiro</CardTitle>
             {totalGastos > Number(salary) ? <p className='text-red-600 flex gap-3'>O gasto de {meses[Number(mes) - 1].toLowerCase()} foi superior ao salário! <AlertTriangleIcon /></p> : ""}
           </CardHeader>
           <CardContent>
@@ -119,12 +117,12 @@ export default function MonthlyExpenses() {
               <p>Salário: R$ {Number(salary).toFixed(2)}</p>
               <p>Total de Gastos: R$ {totalGastos.toFixed(2)}</p>
               <p>Percentual de Gastos: {percentualGastoTotal.toFixed(2)}%</p>
-              <Progress value={percentualGastoTotal > 100 ? 100 : percentualGastoTotal} className="w-full" />
+              <Progress value={percentualGastoTotal > 100 ? 100 : percentualGastoTotal} className="w-full bg-primaryPurple" />
             </div>
           </CardContent>
         </Card>
       </motion.div>
-      <h2 className="text-xl font-semibold mb-4">Gastos por Categoria</h2>
+      <h2 className="text-xl font-semibold text-primaryPurple mb-4">Gastos por Categoria</h2>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -133,7 +131,7 @@ export default function MonthlyExpenses() {
        >
         {loadingListUser || loadingMonthly ? (
             Array.from({ length: 3 }).map((_, index) => (
-              <Card key={index}>
+              <Card key={index} className="border-primaryPurple">
                 <CardHeader>
                   <CardTitle><Skeleton className="h-4 w-[150px]" /></CardTitle>
                 </CardHeader>
@@ -148,16 +146,16 @@ export default function MonthlyExpenses() {
               <motion.div
                 whileHover={{ scale: 1.03 }}
               >
-                <Card key={index}>
+                <Card key={index} className="border-primaryPurple">
                   <CardHeader>
-                    <CardTitle>{gasto.category}</CardTitle>
+                    <CardTitle className="text-primaryOrange">{gasto.category}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-2xl font-bold">R$ {Number(gasto.TotalGasto).toFixed(2)}</p>
                     <p className="text-sm text-gray-500">
                       {((Number(gasto.TotalGasto) / Number(salary)) * 100).toFixed(2)}% do salário
                     </p>
-                    <Progress value={(Number(gasto.TotalGasto) / Number(salary)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(salary)) * 100} className="mt-2" />
+                    <Progress value={(Number(gasto.TotalGasto) / Number(salary)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(salary)) * 100} className="mt-2 bg-primaryPurple" />
                   </CardContent>
                 </Card>
               </motion.div>

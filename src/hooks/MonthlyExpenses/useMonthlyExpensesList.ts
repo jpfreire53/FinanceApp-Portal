@@ -2,7 +2,7 @@ import api from "@/config/api";
 import { MonthlyExpenses } from "@/types/MonthlyExpenses";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { toast } from "../use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export default function () {
     const [data, setData] = useState<Array<MonthlyExpenses>>([]);

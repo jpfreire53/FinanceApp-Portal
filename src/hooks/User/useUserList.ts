@@ -2,7 +2,7 @@ import api from "@/config/api";
 import { User } from "@/types/User";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { toast } from "../use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export default function () {
     const [user, setUser] = useState<User>();

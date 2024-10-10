@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { SearchIcon } from 'lucide-react'
-import useExpensesList from '@/hooks/Expenses/useExpensesList'
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { SearchIcon, DollarSignIcon, CalendarIcon, TagIcon } from 'lucide-react'
+import useExpensesList from '@/hooks/Expenses/useExpensesList'
 
 export default function ListExpenses() {
   const [filtro, setFiltro] = useState('')
@@ -38,14 +37,15 @@ export default function ListExpenses() {
             placeholder="Buscar por descrição"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
-            className="w-full bg-white"
+            className="w-full bg-white border-primaryPurple"
           />
         </div>
         <Select value={categoria} onValueChange={setCategoria}>
-          <SelectTrigger className="w-full md:w-[200px] bg-white">
+          <SelectTrigger className="w-full md:w-[200px] bg-white border-primaryPurple">
             <SelectValue placeholder="Filtrar por categoria" />
           </SelectTrigger>
           <SelectContent className='bg-white'>
+            <SelectItem value="Todas">Todas</SelectItem>
             {listCategories.map((cat) => (
               <SelectItem key={cat.idCategory} value={cat.idCategory.toString()}>{cat.name}</SelectItem>
             ))}
@@ -57,35 +57,46 @@ export default function ListExpenses() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        <Table className='bg-white'>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Descrição</TableHead>
-              <TableHead>Categoria</TableHead>
-              <TableHead>Valor</TableHead>
-              <TableHead>Data</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              Array.from({ length: 5 }).map((_, index) => (
-                <TableRow key={index}>
-                  <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                </TableRow>
-              ))
-            ) : gastosFiltrados.map((gasto) => (
-              <TableRow key={gasto.idExpenses}>
-                <TableCell>{gasto.description}</TableCell>
-                <TableCell>{listCategories.length > 0 && listCategories.filter(categoria => categoria.idCategory == gasto.idCategory)[0].name}</TableCell>
-                <TableCell>R$ {Number(gasto.value).toFixed(2)}</TableCell>
-                <TableCell>{new Date(gasto.date).toLocaleDateString('pt-BR')}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <Card className="bg-white shadow-lg border border-primaryPurple">
+          <CardHeader className="flex items-center justify-between">
+            <h2 className="text-primaryPurple font-bold">Gastos Filtrados</h2>
+            <SearchIcon className="text-primaryPurple" />
+          </CardHeader>
+          <CardContent>
+            <table className="min-w-full table-auto text-left text-sm">
+              <thead>
+                <tr className="bg-primaryOrange text-white">
+                  <th className="px-4 py-2">Descrição</th>
+                  <th className="px-4 py-2">Categoria</th>
+                  <th className="px-4 py-2">Valor</th>
+                  <th className="px-4 py-2">Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <tr key={index}>
+                      <td><Skeleton className="h-4 w-[200px]" /></td>
+                      <td><Skeleton className="h-4 w-[100px]" /></td>
+                      <td><Skeleton className="h-4 w-[100px]" /></td>
+                      <td><Skeleton className="h-4 w-[100px]" /></td>
+                    </tr>
+                  ))
+                ) : gastosFiltrados.map((gasto) => (
+                  <tr key={gasto.idExpenses} className="hover:bg-gray-100">
+                    <td className="border px-4 py-2">{gasto.description}</td>
+                    <td className="border px-4 py-2">{listCategories.length > 0 && listCategories.filter(categoria => categoria.idCategory == gasto.idCategory)[0].name}</td>
+                    <td className="border px-4 py-2 text-primaryOrange">R$ {Number(gasto.value).toFixed(2)}</td>
+                    <td className="border px-4 py-2">{new Date(gasto.date).toLocaleDateString('pt-BR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+          <CardFooter className="text-primaryPurple">
+            {gastosFiltrados.length > 0 ? `${gastosFiltrados.length} registros encontrados` : 'Nenhum gasto encontrado'}
+          </CardFooter>
+        </Card>
       </motion.div>
     </motion.div>
   )

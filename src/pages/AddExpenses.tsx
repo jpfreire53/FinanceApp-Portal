@@ -24,20 +24,20 @@ export default function AddExpenses() {
       className="container mx-auto p-4"
     >
       <Toaster />
-      <h1 className="text-2xl font-bold mb-6">Adicionar Gasto</h1>
+      <h1 className="text-2xl font-bold text-primaryPurple mb-6">Adicionar Gasto</h1>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <Card>
+        <Card className="border border-primaryPurple shadow-lg">
           <CardHeader>
-            <CardTitle>Novo Gasto</CardTitle>
+            <CardTitle className="text-primaryOrange">Novo Gasto</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleCreateExpense} className="space-y-4">
               <div>
-                <Label htmlFor="descricao">Descrição</Label>
+                <Label htmlFor="descricao" className="text-primaryPurple">Descrição</Label>
                 {loading ? (
                   <Skeleton className="h-10 w-full" />
                 ) : (
@@ -46,12 +46,12 @@ export default function AddExpenses() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Ex: Compras no supermercado"
+                    className="border-primaryPurple"
                   />
                 )}
-                
               </div>
               <div>
-                <Label htmlFor="valor">Valor (R$)</Label>
+                <Label htmlFor="valor" className="text-primaryPurple">Valor (R$)</Label>
                 {loading ? (
                   <Skeleton className="h-10 w-full" />
                 ) : (
@@ -62,20 +62,20 @@ export default function AddExpenses() {
                     value={value}
                     onChange={(e) => setValue(Number(e.target.value))}
                     placeholder="0,00"
+                    className="border-primaryPurple"
                   />
                 )}
-                
               </div>
               <div>
-                <Label htmlFor="categoria">Categoria</Label>
+                <Label htmlFor="categoria" className="text-primaryPurple">Categoria</Label>
                 {loading ? (
                   <Skeleton className="h-10 w-full" />
                 ) : (
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-primaryPurple">
                       <SelectValue placeholder="Selecione uma categoria" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="border-primaryPurple">
                       {listCategories.map((cat) => (
                         <SelectItem key={cat.idCategory} value={cat.idCategory.toString()}>{cat.name}</SelectItem>
                       ))}
@@ -84,18 +84,18 @@ export default function AddExpenses() {
                 )}
               </div>
               <div>
-                <Label>Data</Label>
+                <Label className="text-primaryPurple">Data</Label>
                 {loading ? (
                   <Skeleton className="h-10 w-full" />
                 ) : (
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left font-normal">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
+                      <Button variant="outline" className="w-full justify-start text-left font-normal border-primaryPurple text-primaryPurple">
+                        <CalendarIcon className="mr-2 h-4 w-4 text-primaryPurple" />
                         {format(data, "P", { locale: ptBR })}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
+                    <PopoverContent className="w-auto p-0 border-primaryPurple">
                       <Calendar
                         mode="single"
                         selected={data}
@@ -106,7 +106,7 @@ export default function AddExpenses() {
                   </Popover>
                 )}
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-primaryPurple text-white hover:bg-primaryOrange">
                 <PlusIcon className="mr-2 h-4 w-4" /> Adicionar Gasto
               </Button>
             </form>

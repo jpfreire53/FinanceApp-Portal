@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { FormEvent, useState } from "react";
-import { toast } from "../use-toast";
+import { toast } from "@/components/ui/use-toast";
 import api from "@/config/api";
 import Utils from "@/utils/Utils";
 
