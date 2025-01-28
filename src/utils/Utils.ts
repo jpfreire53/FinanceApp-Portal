@@ -32,7 +32,7 @@ const Utils = {
         const jsonString = JSON.stringify(data);
         const encrypted = publicKey.encrypt(forge.util.encodeUtf8(jsonString), 'RSA-OAEP');
         return forge.util.encode64(encrypted);
-      }
+    }
 
 }
 

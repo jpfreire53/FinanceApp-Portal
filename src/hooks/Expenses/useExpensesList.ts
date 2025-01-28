@@ -23,8 +23,13 @@ export default function () {
                     setListCategories(response.data.dados)
                 }
 
-            } catch (error) {
-                console.log(error);
+            } catch (error: any) {
+                if (error.response.status === 404) {
+                    setLoading(false)
+                }
+                if (error.response.status === 500) {
+                    setLoading(false)
+                }
             }
         }
         const handleExpenses = async () => {
@@ -39,8 +44,13 @@ export default function () {
                     setListExpenses(response.data.dados)
                 }
 
-            } catch (error) {
-                console.log(error);
+            } catch (error: any) {
+                if (error.response.status === 404) {
+                    setLoading(false)
+                }
+                if (error.response.status === 500) {
+                    setLoading(false)
+                }
             }
         }
         handleExpenses();

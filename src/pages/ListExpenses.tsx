@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
-import { SearchIcon, DollarSignIcon, CalendarIcon, TagIcon } from 'lucide-react'
+import { SearchIcon } from 'lucide-react'
 import useExpensesList from '@/hooks/Expenses/useExpensesList'
 
 export default function ListExpenses() {

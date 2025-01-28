@@ -2,6 +2,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { FormEvent, useState } from "react";
 import Cookies from "js-cookie";
 import api from "@/config/api";
+import Utils from "@/utils/Utils";
 
 export default function () {
     const [email, setEmail] = useState<string>("")
@@ -26,9 +27,13 @@ export default function () {
                 description: "the password must be greater than 8",
               })
         } else {
-            await api.post("/api/user/login", {
+            const encryptDataLogin = Utils.encryptData({
                 email: email,
                 password: password
+            })
+
+            await api.post("/api/user/login", {
+                data: encryptDataLogin
             }, {
                 withCredentials: true,
                 headers: {
@@ -43,6 +48,7 @@ export default function () {
                       Cookies.set("token", response.data.token)
                       Cookies.set("idUser", response.data.user.idUser);
                       Cookies.set("email", response.data.user.email)
+                      Cookies.set("name", response.data.user.name)
                       setTimeout(() => {
                         setLoading(false)
                         window.location.href = "/features/dashboard"
@@ -97,11 +103,22 @@ export default function () {
             })
 
             if (response.status === 201) {
+                clearFields()
                 toast({
                     title: "User Created!",
                 })
+                setTimeout(() => {
+                    setLoading(false)
+                    window.location.href = "/features/dashboard"
+                  }, 3000)
             }
         } 
+    }
+
+    function clearFields() {
+        setName("")
+        setEmail("")
+        setPassword("")
     }
 
 

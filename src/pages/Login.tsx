@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import useLogin from '@/hooks/User/useLogin'
+import placeyLogo from "@/assets/icons/logo-placey-horizontal-1.svg"
 
 export default function Login() {
   const { email, setEmail, password, setPassword, handleSubmit, loading } = useLogin();
@@ -28,7 +29,7 @@ export default function Login() {
       >
         <Card className="border-0 shadow-xl">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">FinanceApp</CardTitle>
+            <CardTitle className="text-2xl font-bold flex items-center justify-center"><img className='w-1/2 h-1/2' src={placeyLogo} alt="logo" /></CardTitle>
             <CardDescription className="text-center">Entre para gerenciar suas finanças</CardDescription>
           </CardHeader>
           <CardContent>

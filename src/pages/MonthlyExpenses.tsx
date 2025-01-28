@@ -37,17 +37,17 @@ export default function MonthlyExpenses() {
     }
 
     if (data) {
-      setExpenses(data.filter((gastos) => gastos.Mes === Number(mes) && gastos.Ano === Number(ano)))
+      setExpenses(data.filter((gastos) => gastos.Mes === Number(mes) && gastos.Ano === Number(ano)));
     }
   }, [mes, ano, data, user])
 
-  const totalGastos = expenses.reduce((acc, gasto) => acc + Number(gasto.TotalGasto), 0)
+  const totalGastos = expenses.reduce((acc, gasto) => acc + Number(gasto.TotalGasto), 0);
   const percentualGastoTotal = (Number(totalGastos) / Number(salary)) * 100;
 
   const meses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-  ]
+  ];
 
   const anos = Array.from({ length: 5 }, (_, i) => Number(getCurrentYear()) - i);
 
@@ -117,7 +117,7 @@ export default function MonthlyExpenses() {
               <p>Salário: R$ {Number(salary).toFixed(2)}</p>
               <p>Total de Gastos: R$ {totalGastos.toFixed(2)}</p>
               <p>Percentual de Gastos: {percentualGastoTotal.toFixed(2)}%</p>
-              <Progress value={percentualGastoTotal > 100 ? 100 : percentualGastoTotal} className="w-full bg-primaryPurple" />
+              <Progress value={percentualGastoTotal > 100 ? 100 : percentualGastoTotal} className="w-full" />
             </div>
           </CardContent>
         </Card>
@@ -155,7 +155,7 @@ export default function MonthlyExpenses() {
                     <p className="text-sm text-gray-500">
                       {((Number(gasto.TotalGasto) / Number(salary)) * 100).toFixed(2)}% do salário
                     </p>
-                    <Progress value={(Number(gasto.TotalGasto) / Number(salary)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(salary)) * 100} className="mt-2 bg-primaryPurple" />
+                    <Progress value={(Number(gasto.TotalGasto) / Number(salary)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(salary)) * 100} className="mt-2" />
                   </CardContent>
                 </Card>
               </motion.div>
