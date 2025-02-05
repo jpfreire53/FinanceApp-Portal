@@ -1,23 +1,32 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CalendarIcon, PlusIcon } from 'lucide-react'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import useExpensesCreate from '@/hooks/Expenses/useExpensesCreate'
-import { Toaster } from '@/components/ui/toaster'
-import { motion } from "framer-motion"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PlusIcon } from "lucide-react";
+import useExpensesCreate from "@/hooks/Expenses/useExpensesCreate";
+import { Toaster } from "@/components/ui/toaster";
+import { motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
+import DatePicker from "@/components/DatePicker";
 
 export default function AddExpenses() {
-  const { listCategories, description, setDescription, value, setValue, selectedCategory, setSelectedCategory, handleCreateExpense, handleDateChange, data, loading } = useExpensesCreate();
+  const {
+    listCategories,
+    description,
+    setDescription,
+    value,
+    setValue,
+    selectedCategory,
+    setSelectedCategory,
+    handleCreateExpense,
+    handleDateChange,
+    data,
+    loading,
+  } = useExpensesCreate();
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -25,11 +34,7 @@ export default function AddExpenses() {
     >
       <Toaster />
       <h1 className="text-2xl font-bold text-primaryPurple mb-6">Adicionar Gasto</h1>
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
+      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
         <Card className="border border-primaryPurple shadow-lg">
           <CardHeader>
             <CardTitle className="text-primaryOrange">Novo Gasto</CardTitle>
@@ -76,9 +81,15 @@ export default function AddExpenses() {
                       <SelectValue placeholder="Selecione uma categoria" />
                     </SelectTrigger>
                     <SelectContent className="border-primaryPurple">
-                      {listCategories.map((cat) => (
-                        <SelectItem key={cat.idCategory} value={cat.idCategory.toString()}>{cat.name}</SelectItem>
-                      ))}
+                      {listCategories.length > 0 ? (
+                        listCategories.map((cat) => (
+                          <SelectItem key={cat.idCategory} value={cat.idCategory.toString()}>
+                            {cat.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem disabled value="0">Sem categorias cadastradas</SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 )}
@@ -88,22 +99,7 @@ export default function AddExpenses() {
                 {loading ? (
                   <Skeleton className="h-10 w-full" />
                 ) : (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left font-normal border-primaryPurple text-primaryPurple">
-                        <CalendarIcon className="mr-2 h-4 w-4 text-primaryPurple" />
-                        {format(data, "P", { locale: ptBR })}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-primaryPurple">
-                      <Calendar
-                        mode="single"
-                        selected={data}
-                        onSelect={handleDateChange}
-                        locale={ptBR}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <DatePicker onChange={handleDateChange} selectedDate={data} />
                 )}
               </div>
               <Button type="submit" className="w-full bg-primaryPurple text-white hover:bg-primaryOrange">
@@ -114,5 +110,5 @@ export default function AddExpenses() {
         </Card>
       </motion.div>
     </motion.div>
-  )
+  );
 }

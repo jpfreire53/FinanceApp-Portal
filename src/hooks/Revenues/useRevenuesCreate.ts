@@ -111,7 +111,7 @@ export default function () {
         return true;
     }
 
-    const handleDateChange = (day: Date | null) => {
+    const handleDateChange = (day: Date | undefined) => {
         if (day) {
           setData(day); // Passa a data apenas se for válida
         } else {

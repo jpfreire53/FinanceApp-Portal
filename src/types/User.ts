@@ -4,6 +4,5 @@ export interface User {
     idUser: number,
     name: string,
     password: string,
-    salary: string,
     updated: string
 }

@@ -93,8 +93,7 @@ export default function () {
             let response = await api.post("/api/user/create", {
                 name: name,
                 email: email,
-                password: password,
-                salary: 0
+                password: password
             }, {
                 withCredentials: true,
                 headers: {

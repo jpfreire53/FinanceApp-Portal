@@ -7,15 +7,12 @@ export default function () {
 
     const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
-    const [salary, setSalary] = useState<string>("")
-
 
     const handleEdit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await api.put(`/api/user/edit/${idUser}`, {
             name: name,
-            email: email,
-            salary: salary 
+            email: email
         } , {
             withCredentials: true,
             headers: {
@@ -33,8 +30,6 @@ export default function () {
         setName,
         email,
         setEmail,
-        salary,
-        setSalary,
         handleEdit
     }
 }

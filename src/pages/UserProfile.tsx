@@ -10,13 +10,12 @@ import useUserEdit from '@/hooks/User/useUserEdit'
 
 export default function UserProfile() {
   const { user } = useUserList();
-  const { name, setName, email, setEmail, salary, setSalary, handleEdit } = useUserEdit();
+  const { name, setName, email, setEmail, handleEdit } = useUserEdit();
 
   useEffect(() => {
     if (user) {
       setName(user.name)
       setEmail(user.email)
-      setSalary(user.salary)
     }
   }, [user])
 
@@ -53,15 +52,6 @@ export default function UserProfile() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="salario">Salário Mensal (R$)</Label>
-              <Input
-                id="salario"
-                type="number"
-                value={salary}
-                onChange={(e) => setSalary(e.target.value)}
               />
             </div>
             <Button type="submit" className="w-full">Atualizar Perfil</Button>
