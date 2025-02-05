@@ -5,6 +5,7 @@ import { Trash2Icon } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import useCategoryList from '@/hooks/Category/useCategoryList'
 import { useNavigate } from 'react-router-dom'
+import { Toaster } from '@/components/ui/toaster'
 
 export default function ListCategories() {
   const { categories, setCategories, loading } = useCategoryList()
@@ -22,8 +23,8 @@ export default function ListCategories() {
       transition={{ duration: 0.5 }}
       className="container mx-auto p-6"
     >
+      <Toaster />
       <h1 className="text-3xl font-semibold mb-8 text-center">Categorias Existentes</h1>
-
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

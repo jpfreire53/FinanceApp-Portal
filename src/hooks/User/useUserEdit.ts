@@ -1,3 +1,4 @@
+import { toast } from "@/components/ui/use-toast";
 import api from "@/config/api"
 import Cookies from "js-cookie"
 import { FormEvent, useState } from "react";
@@ -20,6 +21,11 @@ export default function () {
             }
         }).then((response) => {
             if (response.status === 200) {
+                toast({
+                    title: "Perfil editado com sucesso",
+                    description: response.data.mensagem,
+                    duration: 5000
+                })
                 window.location.reload();
             }
         })

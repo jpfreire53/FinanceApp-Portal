@@ -1,36 +1,15 @@
 import { toast } from "@/components/ui/use-toast";
 import api from "@/config/api";
-import { Category } from "@/types/Category";
 import Cookies from "js-cookie";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 
 export default function () {
     const [description, setDescription] = useState<string>("");
     const [value, setValue] = useState<number>();
-    const [selectedCategory, setSelectedCategory] = useState<string>();
-    const [listCategories, setListCategories] = useState<Array<Category>>([]);
-    const [data, setData] = useState<Date>(new Date())
+    const [date, setDate] = useState<Date>(new Date())
     const idUser = Cookies.get("idUser")
     const [loading, setLoading] = useState<boolean>(false);
     
-    useEffect(() => {
-        const handleCategories = async () => {
-            try {
-                let response = await api.get(`/api/category/${idUser}`, {
-                    withCredentials: true
-                })
-
-                if (response.status === 200) {
-                    setListCategories(response.data.dados)
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        handleCategories();
-    }, [])
-
     const handleCreateExpense = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validate()) {
@@ -38,8 +17,7 @@ export default function () {
             await api.post("/api/expenses/create", {
                 description: description,
                 value: value,
-                date: data,
-                idCategory: Number(selectedCategory),
+                date: date,
                 idUser: Number(idUser)
             }, {
                 withCredentials: true,
@@ -51,8 +29,9 @@ export default function () {
                     setLoading(false)
                     clearFields()
                     toast({
-                        title: "Gasto registrado",
-                        description: "Sucesso ao registrar este gasto!",
+                        title: "Receita registrada com sucessoo!",
+                        description: "Sucesso ao registrar esta receita!",
+                        duration: 5000
                     })
                 }
             }).catch((error) => {
@@ -60,50 +39,51 @@ export default function () {
                     setLoading(false)
                     console.log(error)
                     toast({
-                        title: "Erro ao criar!",
+                        title: "Erro ao adicionar a receita!",
                         description: `${error.response.data.mensagem}`,
+                        duration: 5000
                     })
                 }
                 if (error.response.status === 500) {
                     setLoading(false)
                     toast({
-                        title: "Erro ao buscar",
+                        title: "Erro ao adicionar a receita!",
                         description: error.response.data.mensagem,
-                      })
+                        duration: 5000
+                    })
                 }
             })
-
-            
-
         }
     }
 
     const clearFields = () => {
         setDescription(""); 
         setValue(undefined); 
-        setSelectedCategory(""); 
-        setData(new Date()); 
+        setDate(new Date()); 
     }
 
     const validate = () => {
         if (description === "") {
             toast({
-                title: "Erro de campo em branco",
-                description: "Informe a descrição",
+                title: "Erro de campo em branco!",
+                description: "Informe a descrição!",
+                duration: 5000
             })
             return false;
         }
         if (value === 0) {
             toast({
-                title: "Erro de campo em branco",
-                description: "Informe o valor gasto",
+                title: "Erro de campo em branco!",
+                description: "Informe o valor da receita!",
+                duration: 5000
             })
             return false;
         }
-        if (Number(selectedCategory) === 0) {
+        if (isNaN(date.getTime())) {
             toast({
-                title: "Erro de campo em branco",
-                description: "Informe a categoria",
+                title: "Erro de campo em branco!",
+                description: "Informe a data!",
+                duration: 5000
             })
             return false;
         }
@@ -113,24 +93,20 @@ export default function () {
 
     const handleDateChange = (day: Date | undefined) => {
         if (day) {
-          setData(day); // Passa a data apenas se for válida
+          setDate(day);
         } else {
-          setData(new Date()); // Define um valor padrão ou trata o caso de `undefined`
+          setDate(new Date());
         }
       };
 
     return {
-        listCategories,
         description,
         setDescription,
         value,
         setValue,
-        selectedCategory,
-        setSelectedCategory,
         handleCreateExpense,
         handleDateChange,
-        data,
-        setData,
+        date,
         loading
     }
 }

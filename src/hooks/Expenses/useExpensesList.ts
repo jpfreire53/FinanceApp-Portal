@@ -1,3 +1,4 @@
+import { toast } from "@/components/ui/use-toast";
 import api from "@/config/api";
 import { Category } from "@/types/Category";
 import { Expenses } from "@/types/Expenses";
@@ -26,9 +27,19 @@ export default function () {
             } catch (error: any) {
                 if (error.response.status === 404) {
                     setLoading(false)
+                    toast({
+                        title: "Nenhuma categoria encontrada!",
+                        description: error.response.data.mensagem,
+                        duration: 5000
+                    })
                 }
                 if (error.response.status === 500) {
                     setLoading(false)
+                    toast({
+                        title: "Erro ao buscar as categorias!",
+                        description: error.response.data.mensagem,
+                        duration: 5000
+                    })
                 }
             }
         }
@@ -47,9 +58,19 @@ export default function () {
             } catch (error: any) {
                 if (error.response.status === 404) {
                     setLoading(false)
+                    toast({
+                        title: "Nenhum gasto encontrado!",
+                        description: error.response.data.mensagem,
+                        duration: 5000
+                    })
                 }
                 if (error.response.status === 500) {
                     setLoading(false)
+                    toast({
+                        title: "Erro ao buscar os gastos!",
+                        description: error.response.data.mensagem,
+                        duration: 5000
+                    })
                 }
             }
         }

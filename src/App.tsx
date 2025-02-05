@@ -10,6 +10,8 @@ import Login from "./pages/Login"
 import Cookies from "js-cookie"
 import Signin from "./pages/Signin"
 import ListCategories from "./pages/ListCategories"
+import AddRevenues from "./pages/AddRevenues"
+import ListRevenues from "./pages/ListRevenues"
 
 function App() {
   const idUser = Cookies.get("idUser")
@@ -89,6 +91,24 @@ function App() {
           :
             <Layout>
               <UserProfile />
+            </Layout>
+          } />
+
+        <Route path="/features/revenues/create" element={
+          idUser === undefined ? 
+            <Navigate to="/" />
+          :
+            <Layout>
+              <AddRevenues />
+            </Layout>
+          } />
+
+        <Route path="/features/revenues" element={
+          idUser === undefined ? 
+            <Navigate to="/" />
+          :
+            <Layout>
+              <ListRevenues />
             </Layout>
           } />
       </Routes>

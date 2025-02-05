@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AlertTriangleIcon } from "lucide-react"
+import useRevenuesList from '@/hooks/Revenues/useRevenuesList'
 
 export default function MonthlyExpenses() {
   const getCurrentMonth = (): string => {
@@ -25,15 +26,16 @@ export default function MonthlyExpenses() {
 
   const { data, loading: loadingMonthly } = useMonthlyExpensesList();
   const { user, loading: loadingListUser } = useUserList();
+  const { listRevenues, loading: loadingListRevenues } = useRevenuesList();
 
   const [mes, setMes] = useState<string>(getCurrentMonth());
   const [ano, setAno] = useState<string>(getCurrentYear());
-  const [salary, setSalary] = useState<string>();
+  const [totalValueRevenues, setTotalValueRevenues] = useState<number>();
   const [expenses, setExpenses] = useState<Array<MonthlyType>>([]);
 
   useEffect(() => {
     if (user) {
-      setSalary(user.salary);
+      setTotalValueRevenues(listRevenues.reduce((acc, revenue) => acc + revenue.value, 0));
     }
 
     if (data) {
@@ -42,10 +44,10 @@ export default function MonthlyExpenses() {
   }, [mes, ano, data, user])
 
   const totalGastos = expenses.reduce((acc, gasto) => acc + Number(gasto.TotalGasto), 0);
-  const percentualGastoTotal = (Number(totalGastos) / Number(salary)) * 100;
+  const percentualGastoTotal = (Number(totalGastos) / Number(totalValueRevenues)) * 100;
 
   const meses = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',  
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
@@ -110,11 +112,11 @@ export default function MonthlyExpenses() {
         <Card className="mb-6 border-primaryPurple">
           <CardHeader className='flex flex-row items-center justify-between'>
             <CardTitle className="text-primaryOrange">Resumo Financeiro</CardTitle>
-            {totalGastos > Number(salary) ? <p className='text-red-600 flex gap-3'>O gasto de {meses[Number(mes) - 1].toLowerCase()} foi superior ao salário! <AlertTriangleIcon /></p> : ""}
+            {totalGastos > Number(totalValueRevenues) ? <p className='text-red-600 flex gap-3'>O gasto de {meses[Number(mes) - 1].toLowerCase()} foi superior ao salário! <AlertTriangleIcon /></p> : ""}
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <p>Salário: R$ {Number(salary).toFixed(2)}</p>
+              <p>Salário: R$ {Number(totalValueRevenues).toFixed(2)}</p>
               <p>Total de Gastos: R$ {totalGastos.toFixed(2)}</p>
               <p>Percentual de Gastos: {percentualGastoTotal.toFixed(2)}%</p>
               <Progress value={percentualGastoTotal > 100 ? 100 : percentualGastoTotal} className="w-full" />
@@ -129,7 +131,7 @@ export default function MonthlyExpenses() {
         transition={{ delay: 0.4 }}
         className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
        >
-        {loadingListUser || loadingMonthly ? (
+        {loadingListUser || loadingMonthly || loadingListRevenues ? (
             Array.from({ length: 3 }).map((_, index) => (
               <Card key={index} className="border-primaryPurple">
                 <CardHeader>
@@ -153,9 +155,9 @@ export default function MonthlyExpenses() {
                   <CardContent>
                     <p className="text-2xl font-bold">R$ {Number(gasto.TotalGasto).toFixed(2)}</p>
                     <p className="text-sm text-gray-500">
-                      {((Number(gasto.TotalGasto) / Number(salary)) * 100).toFixed(2)}% do salário
+                      {((Number(gasto.TotalGasto) / Number(totalValueRevenues)) * 100).toFixed(2)}% do salário
                     </p>
-                    <Progress value={(Number(gasto.TotalGasto) / Number(salary)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(salary)) * 100} className="mt-2" />
+                    <Progress value={(Number(gasto.TotalGasto) / Number(totalValueRevenues)) * 100 > 100 ? 100 : (Number(gasto.TotalGasto) / Number(totalValueRevenues)) * 100} className="mt-2" />
                   </CardContent>
                 </Card>
               </motion.div>

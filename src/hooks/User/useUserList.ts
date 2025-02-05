@@ -23,16 +23,18 @@ export default function () {
                 if (error.response.status === 404) {
                     setLoading(false)
                     toast({
-                        title: "Erro ao buscar",
+                        title: "Nenhum usuário encontrado!",
                         description: error.response.data.mensagem,
-                      })
+                        duration: 5000
+                    })
                 }
                 if (error.response.status === 500) {
                     setLoading(false)
                     toast({
                         title: "Erro ao buscar",
                         description: error.response.data.mensagem,
-                      })
+                        duration: 5000
+                    })
                 }
             })
         }

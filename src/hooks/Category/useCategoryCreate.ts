@@ -16,8 +16,9 @@ export default function () {
         if (name === "") {
             setLoading(false);
             toast({
-                title: "Create Error!",
-                description: "Inform the name of category",
+                title: "Erro ao criar a categoria!",
+                description: "Informe o nome da categoria",
+                duration: 5000
               })
         } else {
             setLoading(true)
@@ -37,7 +38,8 @@ export default function () {
                 if (response.status === 201) {
                     setLoading(false)
                     toast({
-                        title: "Create Success!",
+                        title: "Categoria criada com sucesso!",
+                        duration: 5000
                     })
                 }
             }).catch((error) => {
@@ -45,22 +47,25 @@ export default function () {
                 if (error.response.status === 400) {
                     setLoading(false)
                     toast({
-                        title: "Create Error!",
-                        description: `${error.response.data.mensagem}`
+                        title: "Erro ao criar a categoria!",
+                        description: `${error.response.data.mensagem}`,
+                        duration: 5000
                     })
                 }
                 if (error.response.status === 409) {
                     setLoading(false)
                     toast({
-                        title: "Create Error!",
-                        description: `${error.response.data.mensagem}`
+                        title: "Erro ao criar a categoria!",
+                        description: `${error.response.data.mensagem}`,
+                        duration: 5000
                     })
                 }
                 if (error.response.status === 500) {
                     setLoading(false)
                     toast({
-                        title: "Create Error!",
-                        description: `${error.response.data.mensagem}`
+                        title: "Erro ao criar a categoria!",
+                        description: `${error.response.data.mensagem}`,
+                        duration: 5000
                     })
                 }
             })

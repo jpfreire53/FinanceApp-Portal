@@ -9,13 +9,18 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import useExpensesList from "@/hooks/Expenses/useExpensesList"
 import Utils from "@/utils/Utils"
+import useRevenuesList from "@/hooks/Revenues/useRevenuesList"
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview')
   const { listExpenses } = useExpensesList();
+  const { listRevenues } = useRevenuesList();
   const totalExpenses = listExpenses.length;
   const totalValueExpenses = listExpenses.reduce((acc, curr) => acc + Number(curr.value), 0);
+  const totalValueRevenues = listRevenues.reduce((acc, revenue) => acc + Number(revenue.value), 0);
+  const balanceTotal = totalValueRevenues - totalValueExpenses;
+  const savingValue = totalValueRevenues - balanceTotal;
 
   const overviewData = [
     { name: 'Jan', total: 1200 },
@@ -54,7 +59,7 @@ export default function Dashboard() {
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">R$ 5.231,89</div>
+                    <div className="text-2xl font-bold">{Utils.formattedValue(balanceTotal)}</div>
                     <p className="text-xs text-muted-foreground">+20.1% em relação ao mês passado</p>
                   </CardContent>
                 </Card>
@@ -64,13 +69,13 @@ export default function Dashboard() {
                     <ArrowUpIcon className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">R$ 3.000,00</div>
+                    <div className="text-2xl font-bold">{Utils.formattedValue(totalValueRevenues)}</div>
                     <p className="text-xs text-muted-foreground">+2.5% em relação ao mês passado</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Despesas</CardTitle>
+                    <CardTitle className="text-sm font-medium">Gastos</CardTitle>
                     <ArrowDownIcon className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
@@ -84,7 +89,7 @@ export default function Dashboard() {
                     <Wallet className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">R$ 1.431,80</div>
+                    <div className="text-2xl font-bold">{Utils.formattedValue(savingValue)}</div>
                     <p className="text-xs text-muted-foreground">+4.3% em relação ao mês passado</p>
                   </CardContent>
                 </Card>

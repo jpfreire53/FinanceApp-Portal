@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { CameraIcon } from 'lucide-react'
 import useUserList from '@/hooks/User/useUserList'
 import useUserEdit from '@/hooks/User/useUserEdit'
+import { Toaster } from '@/components/ui/toaster'
 
 export default function UserProfile() {
   const { user } = useUserList();
@@ -21,6 +22,7 @@ export default function UserProfile() {
 
   return (
     <div className="container mx-auto p-4">
+      <Toaster />
       <h1 className="text-2xl font-bold mb-6">Perfil do Usuário</h1>
       <Card>
         <CardHeader>

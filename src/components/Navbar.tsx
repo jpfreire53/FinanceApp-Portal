@@ -14,6 +14,8 @@ import {
   ChevronRightIcon,
   LogOutIcon,
   MenuIcon,
+  Receipt,
+  ReceiptText
 } from "lucide-react"
 import Cookies from "js-cookie"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -52,6 +54,15 @@ export default function Layout({ children }: LayoutProps) {
   const navItems = [
     { path: "/features/dashboard", icon: HomeIcon, label: "Visão geral" },
     {
+      label: "Categorias",
+      pathCompare: "/features/category",
+      icon: PackageIcon,
+      subItems: [
+        { path: "/features/category/create", icon: PackagePlusIcon, label: "Adicionar Categoria" },
+        { path: "/features/category", icon: ListIcon, label: "Listar Categorias" },
+      ],
+    },
+    {
       label: "Gastos",
       pathCompare: "/features/expenses",
       icon: CreditCardIcon,
@@ -62,12 +73,12 @@ export default function Layout({ children }: LayoutProps) {
       ],
     },
     {
-      label: "Categorias",
-      pathCompare: "/features/category",
-      icon: PackageIcon,
+      label: "Receitas",
+      pathCompare: "/features/revenues",
+      icon: Receipt,
       subItems: [
-        { path: "/features/category/create", icon: PackagePlusIcon, label: "Adicionar Categoria" },
-        { path: "/features/category", icon: ListIcon, label: "Listar Categorias" },
+        { path: "/features/revenues/create", icon: PackagePlusIcon, label: "Adicionar Receitas" },
+        { path: "/features/revenues", icon: ReceiptText, label: "Listar Receitas" },
       ],
     },
   ]

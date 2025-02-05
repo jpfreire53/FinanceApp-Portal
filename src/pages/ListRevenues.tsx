@@ -1,23 +1,18 @@
 import { useState } from 'react'
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { SearchIcon } from 'lucide-react'
-import useExpensesList from '@/hooks/Expenses/useExpensesList'
 import { Toaster } from '@/components/ui/toaster'
+import useRevenuesList from '@/hooks/Revenues/useRevenuesList'
 
-export default function ListExpenses() {
+export default function ListRevenues() {
   const [filtro, setFiltro] = useState('')
-  const [categoria, setCategoria] = useState('')
 
-  const { listCategories, listExpenses, loading } = useExpensesList();
+  const { listRevenues, loading } = useRevenuesList();
 
-  const gastosFiltrados = listExpenses.filter(gasto => 
-    gasto.description.toLowerCase().includes(filtro.toLowerCase()) && 
-    (categoria === '' || categoria === 'Todas' || gasto.idCategory === Number(categoria))
-  )
+  const receitasFiltradas = listRevenues.filter(revenue => revenue.description.toLowerCase().includes(filtro.toLowerCase()))
 
   return (
     <motion.div
@@ -42,17 +37,6 @@ export default function ListExpenses() {
             className="w-full bg-white border-primaryPurple"
           />
         </div>
-        <Select value={categoria} onValueChange={setCategoria}>
-          <SelectTrigger className="w-full md:w-[200px] bg-white border-primaryPurple">
-            <SelectValue placeholder="Filtrar por categoria" />
-          </SelectTrigger>
-          <SelectContent className='bg-white'>
-            <SelectItem value="Todas">Todas</SelectItem>
-            {listCategories.map((cat) => (
-              <SelectItem key={cat.idCategory} value={cat.idCategory.toString()}>{cat.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </motion.div>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
@@ -69,9 +53,7 @@ export default function ListExpenses() {
               <thead>
                 <tr className="bg-primaryOrange text-white">
                   <th className="px-4 py-2">Descrição</th>
-                  <th className="px-4 py-2">Categoria</th>
                   <th className="px-4 py-2">Valor</th>
-                  <th className="px-4 py-2">Data</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,23 +62,19 @@ export default function ListExpenses() {
                     <tr key={index}>
                       <td><Skeleton className="h-4 w-[200px]" /></td>
                       <td><Skeleton className="h-4 w-[100px]" /></td>
-                      <td><Skeleton className="h-4 w-[100px]" /></td>
-                      <td><Skeleton className="h-4 w-[100px]" /></td>
                     </tr>
                   ))
-                ) : gastosFiltrados.map((gasto) => (
-                  <tr key={gasto.idExpenses} className="hover:bg-gray-100">
-                    <td className="border px-4 py-2">{gasto.description}</td>
-                    <td className="border px-4 py-2">{listCategories.length > 0 && listCategories.filter(categoria => categoria.idCategory == gasto.idCategory)[0].name}</td>
-                    <td className="border px-4 py-2 text-primaryOrange">R$ {Number(gasto.value).toFixed(2)}</td>
-                    <td className="border px-4 py-2">{new Date(gasto.date).toLocaleDateString('pt-BR')}</td>
+                ) : receitasFiltradas.map((receita) => (
+                  <tr key={receita.idRevenue} className="hover:bg-gray-100">
+                    <td className="border px-4 py-2">{receita.description}</td>
+                    <td className="border px-4 py-2 text-primaryOrange">R$ {Number(receita.value).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </CardContent>
           <CardFooter className="text-primaryPurple">
-            {gastosFiltrados.length > 0 ? `${gastosFiltrados.length} registros encontrados` : 'Nenhum gasto encontrado'}
+            {receitasFiltradas.length > 0 ? `${receitasFiltradas.length} registros encontrados` : 'Nenhum gasto encontrado'}
           </CardFooter>
         </Card>
       </motion.div>

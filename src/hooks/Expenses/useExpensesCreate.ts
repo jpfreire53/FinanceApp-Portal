@@ -24,8 +24,23 @@ export default function () {
                     setListCategories(response.data.dados)
                 }
 
-            } catch (error) {
-                console.log(error);
+            } catch (error: any) {
+                if (error.response.status === 404) {
+                    setLoading(false)
+                    toast({
+                        title: "Nenhuma categoria encontrada!",
+                        description: error.response.data.mensagem,
+                        duration: 5000
+                    })
+                }
+                if (error.response.status === 500) {
+                    setLoading(false)
+                    toast({
+                        title: "Erro ao buscar as categorias!",
+                        description: error.response.data.mensagem,
+                        duration: 5000
+                    })
+                }
             }
         }
         handleCategories();
@@ -53,6 +68,7 @@ export default function () {
                     toast({
                         title: "Gasto registrado",
                         description: "Sucesso ao registrar este gasto!",
+                        duration: 5000
                     })
                 }
             }).catch((error) => {
@@ -60,16 +76,18 @@ export default function () {
                     setLoading(false)
                     console.log(error)
                     toast({
-                        title: "Erro ao criar!",
+                        title: "Erro ao adicionar um gasto!",
                         description: `${error.response.data.mensagem}`,
+                        duration: 5000
                     })
                 }
                 if (error.response.status === 500) {
                     setLoading(false)
                     toast({
-                        title: "Erro ao buscar",
+                        title: "Erro ao adicionar um gasto!",
                         description: error.response.data.mensagem,
-                      })
+                        duration: 5000
+                    })
                 }
             })
 

@@ -22,15 +22,17 @@ export default function () {
             if (error.response.status === 400) {
                 setLoading(false)
                 toast({
-                    title: "Login Error!",
+                    title: "Erro ao buscar as categorias!",
                     description: `${error.response.data.mensagem}`,
+                    duration: 5000
                 })
             }
             if (error.response.status === 404) {
                 setLoading(false)
                 toast({
-                    title: "Login Error!",
+                    title: "Nenhuma categoria encontrada!",
                     description: `${error.response.data.mensagem}`,
+                    duration: 5000
                 })
             }
         })

@@ -19,13 +19,15 @@ export default function () {
             toast({
                 title: "Login Error!",
                 description: "Inform the email and/or password",
-              })
+                duration: 5000
+            })
         } else if (password.length < 8) {
             setLoading(false)
             toast({
                 title: "Login Error!",
                 description: "the password must be greater than 8",
-              })
+                duration: 5000
+            })
         } else {
             const encryptDataLogin = Utils.encryptData({
                 email: email,
@@ -42,8 +44,9 @@ export default function () {
             }).then(response => {
                 if (response.status === 200) {
                     toast({
-                        title: "Login Success!",
-                        description: `${email} logged successfully!`,
+                        title: "Sucesso ao realizar login!",
+                        description: `${email} logado com sucesso!`,
+                        duration: 5000
                       })
                       Cookies.set("token", response.data.token)
                       Cookies.set("idUser", response.data.user.idUser);
@@ -59,17 +62,19 @@ export default function () {
                     setLoading(false)
                     console.log(error)
                     toast({
-                        title: "Login Error!",
+                        title: "Erro ao realizar login!",
                         description: `${error.response.data.mensagem}`,
-                      })
+                        duration: 5000
+                    })
                 }
                 if (error.response.status === 401) {
                     setLoading(false)
                     console.log(error)
                     toast({
-                        title: "Login Error!",
+                        title: "Erro ao realizar login!",
                         description: `${error.response.data.mensagem}`,
-                      })
+                        duration: 5000
+                    })
                 }
             })
 
@@ -81,14 +86,16 @@ export default function () {
         e.preventDefault();
         if (email === "" && password === "" && name === "") {
             toast({
-                title: "Login Error!",
-                description: "Inform the email, password and name",
-              })
+                title: "Erro ao criar a conta!",
+                description: "Informe o seu email, sua senha e seu nome",
+                duration: 5000
+            })
         } else if (password.length < 8) {
             toast({
-                title: "Login Error!",
+                title: "Erro ao criar a conta!",
                 description: "the password must be greater than 8",
-              })
+                duration: 5000
+            })
         } else {
             let response = await api.post("/api/user/create", {
                 name: name,
@@ -104,12 +111,12 @@ export default function () {
             if (response.status === 201) {
                 clearFields()
                 toast({
-                    title: "User Created!",
+                    title: "Conta criada com sucesso!",
                 })
                 setTimeout(() => {
                     setLoading(false)
                     window.location.href = "/features/dashboard"
-                  }, 3000)
+                }, 3000)
             }
         } 
     }

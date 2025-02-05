@@ -22,16 +22,18 @@ export default function () {
             if (error.response.status === 404) {
                 setLoading(false)
                 toast({
-                    title: "Erro ao buscar",
+                    title: "Nenhuma resumo encontrado!",
                     description: error.response.data.mensagem,
-                  })
+                    duration: 5000
+                })
             }
             if (error.response.status === 500) {
                 setLoading(false)
                 toast({
-                    title: "Erro ao buscar",
+                    title: "Erro ao buscar o resumo!",
                     description: error.response.data.mensagem,
-                  })
+                    duration: 5000
+                })
             }
         })
     }
