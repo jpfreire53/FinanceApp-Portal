@@ -5,12 +5,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { SearchIcon } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
-import useRevenuesList from '@/hooks/Revenues/useRevenuesList'
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
+import useRevenuesPaginationList from '@/hooks/Revenues/useRevenuesPaginationList'
 
 export default function ListRevenues() {
   const [filtro, setFiltro] = useState('')
 
-  const { listRevenues, loading } = useRevenuesList();
+  const { listRevenues, loading, setCurrentPage, totalPages } = useRevenuesPaginationList();
 
   const receitasFiltradas = listRevenues.filter(revenue => revenue.description.toLowerCase().includes(filtro.toLowerCase()))
 
@@ -22,7 +23,7 @@ export default function ListRevenues() {
       className="container mx-auto p-4"
     >
       <Toaster />
-      <h1 className="text-2xl font-bold mb-6">Lista de Gastos</h1>
+      <h1 className="text-2xl font-bold mb-6">Lista de Receitas</h1>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -43,9 +44,9 @@ export default function ListRevenues() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        <Card className="bg-white shadow-lg border border-primaryPurple">
+        <Card className="bg-white shadow-xl border border-primaryPurple">
           <CardHeader className="flex items-center justify-between">
-            <h2 className="text-primaryPurple font-bold">Gastos Filtrados</h2>
+            <h2 className="text-primaryPurple font-bold">Receitas Filtradas</h2>
             <SearchIcon className="text-primaryPurple" />
           </CardHeader>
           <CardContent>
@@ -77,6 +78,23 @@ export default function ListRevenues() {
             {receitasFiltradas.length > 0 ? `${receitasFiltradas.length} registros encontrados` : 'Nenhum gasto encontrado'}
           </CardFooter>
         </Card>
+          <Pagination className="bg-white rounded-lg shadow-lg border border-primaryPurple mt-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink onClick={() => setCurrentPage(index + 1)}>{index + 1}</PaginationLink>
+                </PaginationItem>
+              ))}
+
+              {totalPages > 5 && <PaginationItem><PaginationEllipsis /></PaginationItem>}
+              <PaginationItem>
+                <PaginationNext onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} />
+              </PaginationItem>
+            </PaginationContent>
+        </Pagination>
       </motion.div>
     </motion.div>
   )

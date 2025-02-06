@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AlertTriangleIcon } from "lucide-react"
 import useRevenuesList from '@/hooks/Revenues/useRevenuesList'
+import Utils from '@/utils/Utils'
 
 export default function MonthlyExpenses() {
   const getCurrentMonth = (): string => {
@@ -28,6 +29,8 @@ export default function MonthlyExpenses() {
   const { user, loading: loadingListUser } = useUserList();
   const { listRevenues, loading: loadingListRevenues } = useRevenuesList();
 
+  console.log(listRevenues);
+
   const [mes, setMes] = useState<string>(getCurrentMonth());
   const [ano, setAno] = useState<string>(getCurrentYear());
   const [totalValueRevenues, setTotalValueRevenues] = useState<number>();
@@ -35,7 +38,7 @@ export default function MonthlyExpenses() {
 
   useEffect(() => {
     if (user) {
-      setTotalValueRevenues(listRevenues.reduce((acc, revenue) => acc + revenue.value, 0));
+      setTotalValueRevenues(listRevenues.reduce((acc, revenue) => acc + Number(revenue.value), 0));
     }
 
     if (data) {
@@ -116,8 +119,8 @@ export default function MonthlyExpenses() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <p>Salário: R$ {Number(totalValueRevenues).toFixed(2)}</p>
-              <p>Total de Gastos: R$ {totalGastos.toFixed(2)}</p>
+              <p>Receita: {Utils.formattedValue(totalValueRevenues ?? 0)}</p>
+              <p>Total de Gastos: {Utils.formattedValue(totalGastos)}</p>
               <p>Percentual de Gastos: {percentualGastoTotal.toFixed(2)}%</p>
               <Progress value={percentualGastoTotal > 100 ? 100 : percentualGastoTotal} className="w-full" />
             </div>
