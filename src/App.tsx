@@ -12,9 +12,11 @@ import Signin from "./pages/Signin"
 import ListCategories from "./pages/ListCategories"
 import AddRevenues from "./pages/AddRevenues"
 import ListRevenues from "./pages/ListRevenues"
+import PresentationScreen from "./components/Presentation"
 
 function App() {
   const idUser = Cookies.get("idUser")
+  const firstTime = Cookies.get("firstTime")
 
   return (
     <BrowserRouter>
@@ -35,9 +37,13 @@ function App() {
           idUser === undefined ? 
             <Navigate to="/" />
           :
+          firstTime === "true" ? (
+            <PresentationScreen />
+          ) : (
             <Layout>
-              <Dashboard />
-            </Layout>
+            <Dashboard />
+          </Layout>
+          )
           } />
 
         <Route path="/features/category/create" element={

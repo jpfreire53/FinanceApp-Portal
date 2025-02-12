@@ -5,14 +5,15 @@ import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { SearchIcon } from 'lucide-react'
-import useExpensesList from '@/hooks/Expenses/useExpensesList'
 import { Toaster } from '@/components/ui/toaster'
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
+import useExpensesPaginationList from '@/hooks/Expenses/useExpensesPaginationList'
 
 export default function ListExpenses() {
   const [filtro, setFiltro] = useState('')
   const [categoria, setCategoria] = useState('')
 
-  const { listCategories, listExpenses, loading } = useExpensesList();
+  const { listCategories, listExpenses, loading, setCurrentPage, totalPages } = useExpensesPaginationList();
 
   const gastosFiltrados = listExpenses.filter(gasto => 
     gasto.description.toLowerCase().includes(filtro.toLowerCase()) && 
@@ -99,6 +100,23 @@ export default function ListExpenses() {
             {gastosFiltrados.length > 0 ? `${gastosFiltrados.length} registros encontrados` : 'Nenhum gasto encontrado'}
           </CardFooter>
         </Card>
+        <Pagination className="bg-white rounded-lg shadow-lg border border-primaryPurple mt-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink onClick={() => setCurrentPage(index + 1)}>{index + 1}</PaginationLink>
+                </PaginationItem>
+              ))}
+
+              {totalPages > 5 && <PaginationItem><PaginationEllipsis /></PaginationItem>}
+              <PaginationItem>
+                <PaginationNext onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} />
+              </PaginationItem>
+            </PaginationContent>
+        </Pagination>
       </motion.div>
     </motion.div>
   )

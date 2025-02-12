@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,14 +10,22 @@ import { motion } from "framer-motion"
 import { useNavigate } from 'react-router-dom'
 
 export default function CreateCategory() {
-  const { name, setName, handleCreateCategory, loading: loadingList } = useCategoryCreate();
-  const navigate = useNavigate()
+  const { name, setName, handleCreateCategory } = useCategoryCreate();
+  const [errors, setErrors] = useState({ name: false });
+  const navigate = useNavigate();
 
-  const adicionarCategoria = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (name.trim()) {
-      handleCreateCategory(e)
-      setName('')
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const newErrors = {
+      name: !name.trim()
+    };
+
+    setErrors(newErrors);
+
+    if (!newErrors.name) {
+      handleCreateCategory(e);
+      setName('');
     }
   }
 
@@ -42,17 +50,20 @@ export default function CreateCategory() {
             <CardTitle className="text-xl text-center">Adicionar Nova Categoria</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={adicionarCategoria} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="categoria">Nome da Categoria</Label>
-                <Input
-                  id="categoria"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  placeholder="Ex: Alimentação, Transporte, Lazer"
-                  className="border-gray-300 focus:ring-primary focus:border-primary"
-                />
+                <Label className={`${errors.name && "text-red-500"}`} htmlFor="categoria">Nome da Categoria</Label>
+                <>
+                  <Input
+                    id="categoria"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    placeholder="Ex: Alimentação, Transporte, Lazer"
+                    className={`${errors.name ? "border-red-500" : "border-gray-300"} focus:ring-primary focus:border-primary`}
+                  />
+                  {errors.name && <p className="text-red-500 text-sm">Este campo é obrigatório.</p>}
+                </>
               </div>
               <div className="flex justify-center">
                 <Button type="submit" className="bg-primaryPurple text-white hover:bg-indigo-600 transition-all duration-300 ease-in-out">

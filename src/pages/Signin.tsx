@@ -1,4 +1,3 @@
-import React from 'react'
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,9 +8,26 @@ import { Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import useLogin from '@/hooks/User/useLogin'
 import placeyLogo from "@/assets/icons/logo-placey-horizontal-1.svg"
+import { FormEvent, useState } from "react"
 
 export default function Signin() {
   const { email, setEmail, password, setPassword, name, setName, handleCreateSubmit, loading } = useLogin();
+  const [errors, setErrors] = useState({ name: false, email: false, password: false });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newErrors = {
+      name: !name.trim(),
+      email: !email.trim(),
+      password: !password.trim()
+    }
+
+    setErrors(newErrors);
+
+    if (!newErrors.name && !newErrors.email && !newErrors.password) {
+      handleCreateSubmit(e);
+    }
+  }
 
   return (
     <motion.div
@@ -33,37 +49,46 @@ export default function Signin() {
             <CardDescription className="text-center">Crie sua conta para começar</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleCreateSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="nome">Nome</Label>
-                <Input
-                  id="nome"
-                  placeholder="Seu nome"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+                <Label className={`${errors.name && "text-red-500"}`} htmlFor="nome">Nome</Label>
+                <>
+                  <Input
+                    id="nome"
+                    placeholder="Seu nome"
+                    value={name}
+                    className={`border ${errors.name && "border-red-500"}`}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  {errors.name && <p className="text-red-500 text-sm">Este campo é obrigatório.</p>}
+                </>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email-cadastro">E-mail</Label>
-                <Input
-                  id="email-cadastro"
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                <Label className={`${errors.email && "text-red-500"}`} htmlFor="email-cadastro">E-mail</Label>
+                <>
+                  <Input
+                    id="email-cadastro"
+                    type="email"
+                    placeholder="seu@email.com"
+                    className={`border ${errors.email && "border-red-500"}`}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  {errors.email && <p className="text-red-500 text-sm">Este campo é obrigatório.</p>}
+                </>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="senha-cadastro">Senha</Label>
-                <Input
-                  id="senha-cadastro"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <Label className={`${errors.password && "text-red-500"}`} htmlFor="senha-cadastro">Senha</Label>
+                <>
+                  <Input
+                    id="senha-cadastro"
+                    type="password"
+                    className={`border ${errors.password && "border-red-500"}`}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  {errors.password && <p className="text-red-500 text-sm">Este campo é obrigatório.</p>}
+                </>
               </div>
               <Button type="submit" className="w-full bg-primaryPurple hover:bg-indigo-600" disabled={loading}>
                 {loading ? (

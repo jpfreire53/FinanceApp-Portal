@@ -2,12 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { ArrowUpIcon, DollarSign, ArrowDownIcon, Wallet } from 'lucide-react'
 import { motion } from "framer-motion"
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis } from "recharts"
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import useExpensesList from "@/hooks/Expenses/useExpensesList"
+import { format, subMonths } from "date-fns"
+import { ptBR } from "date-fns/locale"
 import Utils from "@/utils/Utils"
 import useRevenuesList from "@/hooks/Revenues/useRevenuesList"
 
@@ -16,20 +18,34 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview')
   const { listExpenses } = useExpensesList();
   const { listRevenues } = useRevenuesList();
+
   const totalExpenses = listExpenses.length;
   const totalValueExpenses = listExpenses.reduce((acc, curr) => acc + Number(curr.value), 0);
   const totalValueRevenues = listRevenues.reduce((acc, revenue) => acc + Number(revenue.value), 0);
   const balanceTotal = totalValueRevenues - totalValueExpenses;
-  const savingValue = totalValueRevenues - balanceTotal;
+  const savingValue = balanceTotal - totalValueExpenses;
 
-  const overviewData = [
-    { name: 'Jan', total: 1200 },
-    { name: 'Fev', total: 900 },
-    { name: 'Mar', total: 1600 },
-    { name: 'Abr', total: 1300 },
-    { name: 'Mai', total: 1800 },
-    { name: 'Jun', total: 2000 },
-  ]
+  const overviewData = useMemo(() => {
+    const now = new Date();
+    const lastSixMonths = Array.from({ length: 5 }, (_, i) => {
+      const monthDate = subMonths(now, i);
+      return {
+        name: format(monthDate, "MMM", { locale: ptBR }),
+        total: 0,
+        month: format(monthDate, "yyyy-MM"),
+      };
+    }).reverse();
+
+    listExpenses.forEach((expense) => {
+      const expenseMonth = expense.date.split("T")[0].slice(0, 7);
+      const monthData = lastSixMonths.find((m) => m.month === expenseMonth);
+      if (monthData) {
+        monthData.total += Number(expense.value);
+      }
+    });
+
+    return lastSixMonths.map(({ name, total }) => ({ name, total }));
+  }, [listExpenses]);
 
   return (
     <motion.div 
@@ -119,12 +135,11 @@ export default function Dashboard() {
                       {listExpenses.map((transaction) => (
                         <div key={transaction.idExpenses} className="flex items-center">
                           <Avatar className="h-9 w-9">
-                            <AvatarImage src="/placeholder-user.jpg" alt="Avatar" />
-                            <AvatarFallback>{transaction.description}</AvatarFallback>
+                            <AvatarFallback>{transaction.idExpenses}</AvatarFallback>
                           </Avatar>
-                          <div className="ml-4 space-y-1">
+                          <div className="space-y-1">
                             <p className="text-sm font-medium leading-none">{transaction.description}</p>
-                            <p className="text-sm text-muted-foreground">{transaction.date}</p>
+                            <p className="text-sm text-muted-foreground">{transaction.date.split("T")[0]}</p>
                           </div>
                           <div className={`ml-auto font-medium ${Number(transaction.value) > 0 ? 'text-green-500' : 'text-red-500'}`}>
                             {Number(transaction.value) > 0 ? '+' : '-'}R$ {Math.abs(Number(transaction.value)).toFixed(2)}

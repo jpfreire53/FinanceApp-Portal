@@ -32,6 +32,34 @@ const Utils = {
         const jsonString = JSON.stringify(data);
         const encrypted = publicKey.encrypt(forge.util.encodeUtf8(jsonString), 'RSA-OAEP');
         return forge.util.encode64(encrypted);
+    },
+
+    verifyPassword: function (password: string) {
+        const specialTest = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const numTest = /[0-9]/.test(password);
+        const upperTest = /[A-Z]/.test(password);
+        const lowerTest = /[a-z]/.test(password);
+
+        if (password.length < 8) {
+            return {success: false, message: "A senha informada tem que ser maior que 8 caracteres."}
+        }
+        if (!specialTest) {
+            return {success: false, message: "A senha informada tem que ter pelo menos 1 caracter especial."}
+        }
+        if (!numTest) {
+            return {success: false, message: "A senha tem que conter números"}
+        }
+        if (!upperTest) {
+            return {success: false, message: "A senha informada tem que ter pelo menos 1 letra maiúscula."}
+        }
+        if (!lowerTest) {
+            return {success: false, message: "A senha informada tem que ter pelo menos 1 letra minúscula."}
+        }
+        if (password == "password") {
+            return {success: false, message: "A senha é muito comum."}
+        }
+
+        return {success: true, message: "Usuário criado com sucesso."}
     }
 
 }

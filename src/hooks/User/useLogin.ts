@@ -52,6 +52,7 @@ export default function () {
                       Cookies.set("idUser", response.data.user.idUser);
                       Cookies.set("email", response.data.user.email)
                       Cookies.set("name", response.data.user.name)
+                      Cookies.set("firstTime", response.data.user.firstTime)
                       setTimeout(() => {
                         setLoading(false)
                         window.location.href = "/features/dashboard"
@@ -84,40 +85,61 @@ export default function () {
 
     const handleCreateSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log(Utils.verifyPassword(password)?.success)
         if (email === "" && password === "" && name === "") {
             toast({
                 title: "Erro ao criar a conta!",
                 description: "Informe o seu email, sua senha e seu nome",
                 duration: 5000
             })
-        } else if (password.length < 8) {
+        } else if (!Utils.verifyPassword(password)!.success) {
             toast({
                 title: "Erro ao criar a conta!",
-                description: "the password must be greater than 8",
+                description: Utils.verifyPassword(password)!.message,
                 duration: 5000
             })
         } else {
-            let response = await api.post("/api/user/create", {
-                name: name,
-                email: email,
-                password: password
-            }, {
-                withCredentials: true,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-
-            if (response.status === 201) {
-                clearFields()
-                toast({
-                    title: "Conta criada com sucesso!",
+            try {
+                let response = await api.post("/api/user/create", {
+                    name: name,
+                    email: email,
+                    password: password
+                }, {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
                 })
-                setTimeout(() => {
+    
+                if (response.status === 201) {
+                    clearFields()
+                    toast({
+                        title: "Conta criada com sucesso!",
+                    })
+                    setTimeout(() => {
+                        setLoading(false)
+                        window.location.href = "/features/dashboard"
+                    }, 3000)
+                }
+            } catch (error: any) {
+                if (error.response.status === 409) {
                     setLoading(false)
-                    window.location.href = "/features/dashboard"
-                }, 3000)
-            }
+                    toast({
+                        title: "Erro ao criar a conta!",
+                        description: `${error.response.data.mensagem}`,
+                        duration: 5000
+                    })
+                }
+                if (error.response.status === 500) {
+                    setLoading(false)
+                    console.log(error)
+                    toast({
+                        title: "Erro ao criar a conta!",
+                        description: `${error.response.data.mensagem}`,
+                        duration: 5000
+                    })
+                }
+            }   
         } 
     }
 

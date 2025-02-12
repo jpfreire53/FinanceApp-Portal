@@ -37,7 +37,6 @@ export default function () {
             }).catch((error) => {
                 if (error.response.status === 400) {
                     setLoading(false)
-                    console.log(error)
                     toast({
                         title: "Erro ao adicionar a receita!",
                         description: `${error.response.data.mensagem}`,
